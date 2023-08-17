@@ -16,6 +16,26 @@ gem 'puma', '~> 5.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+# Use pry gem for debbuging
+gem 'pry', '0.14.2'
+
+# Use rubocop gem for coding conventions
+gem 'rubocop-rails', '2.19', require: false
+
+# Use dotenv gem for environment variable
+gem 'dotenv-rails', '2.8', groups: [:development, :test]
+
+# Use letter_opener gem for mail preview without sending it
+gem "letter_opener", group: :development
+
+# Use rack-cors gem for cross plateform requests
+gem 'rack-cors', '2.0.1'
+
+# Use devise, devise-jwt and jsonapi-serializer gems for user authentication
+gem 'devise', '4.9.2'
+gem 'devise-jwt', '0.11.0'
+gem 'jsonapi-serializer', '2.2'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
