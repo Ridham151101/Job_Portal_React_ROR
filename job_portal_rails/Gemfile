@@ -36,6 +36,9 @@ gem 'devise', '4.9.2'
 gem 'devise-jwt', '0.11.0'
 gem 'jsonapi-serializer', '2.2'
 
+# Use Rolify gem for roles
+gem 'rolify', '6.0'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

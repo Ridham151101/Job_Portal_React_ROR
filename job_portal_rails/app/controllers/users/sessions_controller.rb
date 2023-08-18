@@ -30,10 +30,15 @@ class Users::SessionsController < Devise::SessionsController
   private
 
   def respond_with(current_user, _opts = {})
+    auth_token = request.env['warden-jwt_auth.token']  # Retrieve the existing token from the environment
+
     render json: {
       status: { 
         code: 200, message: 'Logged in successfully.',
-        data: { user: UserSerializer.new(current_user).serializable_hash[:data][:attributes] }
+        data: { 
+          user: UserSerializer.new(current_user).serializable_hash[:data][:attributes],
+          auth_token: auth_token  # Include the existing token in the response
+        }
       }
     }, status: :ok
   end

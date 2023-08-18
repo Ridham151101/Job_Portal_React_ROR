@@ -12,9 +12,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    build_resource(sign_up_params)
+
+    # Assign role based on the 'role' parameter in the request
+    resource.add_role(params[:user][:role]) if params[:user][:role]
+
+    resource.save!
+    respond_with(resource, _opts = {})
+  end
 
   # GET /resource/edit
   # def edit
@@ -64,16 +70,20 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   private
 
-  def respond_with(current_user, _opts = {})
+  def respond_with(resource, _opts = {})
     if resource.persisted?
       render json: {
-        status: {code: 200, message: 'Signed up successfully.'},
-        data: UserSerializer.new(current_user).serializable_hash[:data][:attributes]
+        status: { code: 200, message: 'Signed up successfully.' },
+        data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
       }
     else
       render json: {
-        status: {message: "User couldn't be created successfully. #{current_user.errors.full_messages.to_sentence}"}
+        status: { message: "User couldn't be created successfully. #{resource.errors.full_messages.to_sentence}" }
       }, status: :unprocessable_entity
     end
+  end
+
+  def sign_up_params
+    params.require(:user).permit(:email, :password, :password_confirmation, :name, :gender)
   end
 end
