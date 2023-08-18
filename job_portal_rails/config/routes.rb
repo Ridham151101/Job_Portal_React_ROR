@@ -8,4 +8,11 @@ Rails.application.routes.draw do
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }
+
+  namespace :api do
+    namespace :v1 do
+      resource :profile, only: [:update]
+      resources :portfolios, only: [:index, :show, :create, :update]
+    end
+  end
 end
