@@ -13,7 +13,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     # Assign role based on the 'role' parameter in the request
     resource.add_role(params[:user][:role]) if params[:user][:role]
 
-    resource.save!
+    resource.save
     respond_with(resource, _opts = {})
   end
 

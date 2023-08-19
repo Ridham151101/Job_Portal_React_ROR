@@ -1,5 +1,5 @@
 class Api::V1::PortfoliosController < ApplicationController
-  before_action :set_portfolio, only: %i[show update]
+  before_action :set_portfolio, only: %i[show update destroy]
 
   def index
     @portfolios = current_user.portfolios
@@ -28,6 +28,16 @@ class Api::V1::PortfoliosController < ApplicationController
       render json: {
         status: { code: 200, message: 'Portfolio Updated Successfully.' },
         data: PortfolioSerializer.new(@portfolio).serializable_hash[:data][:attributes]
+      }, status: :ok
+    else
+      render json: { errors: @portfolio.errors }, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    if @portfolio.destroy
+      render json: {
+        status: { code: 200, message: 'Portfolio Deleted Successfully.' }
       }, status: :ok
     else
       render json: { errors: @portfolio.errors }, status: :unprocessable_entity

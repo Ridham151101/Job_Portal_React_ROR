@@ -8,4 +8,5 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   has_many :portfolios, dependent: :destroy
+  has_many :companies, foreign_key: :job_creator_id, class_name: "Company", dependent: :destroy
 end

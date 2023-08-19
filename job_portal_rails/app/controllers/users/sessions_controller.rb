@@ -9,7 +9,7 @@ class Users::SessionsController < Devise::SessionsController
   private
 
   def respond_with(current_user, _opts = {})
-    token = request.env['warden-jwt_auth.token']  # Retrieve the existing token from the environment
+    token = "Bearer #{request.env['warden-jwt_auth.token']}"  # Retrieve the existing token from the environment
 
     render json: {
       status: {code: 200, message: 'Logged in successfully.'},
@@ -22,7 +22,7 @@ class Users::SessionsController < Devise::SessionsController
 
   def respond_to_on_destroy
     if request.headers['Authorization'].present?
-      jwt_payload = JWT.decode(request.headers['Authorization'], Rails.application.credentials.devise_jwt_secret_key!).first
+      jwt_payload = JWT.decode(request.headers['Authorization'].split(' ').last, Rails.application.credentials.devise_jwt_secret_key!).first
       current_user = User.find(jwt_payload['sub'])
     end
     
