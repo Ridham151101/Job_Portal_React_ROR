@@ -42,6 +42,10 @@ gem 'rolify', '6.0'
 # Use Cancancan gem for restrict action for role vise user
 gem 'cancancan', '3.5'
 
+# Use active storage gems for store pdf files in active storage
+gem 'activestorage'
+gem 'active_storage_validations'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

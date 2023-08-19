@@ -6,7 +6,7 @@ class CreateCompanies < ActiveRecord::Migration[6.1]
       t.text :address
       t.string :email
       t.string :phone_number
-      t.references :job_creator, null: false, foreign_key: { to_table: :users }
+      t.references :company_creator, null: false, foreign_key: { to_table: :users }
 
       t.timestamps
     end

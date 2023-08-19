@@ -5,7 +5,7 @@ class Api::V1::CompaniesController < ApplicationController
   def index
     @companies = current_user.companies.all
     serialized_companies = @companies.map { |company| CompanySerializer.new(company).serializable_hash[:data][:attributes] }
-    render json: serialized_companies
+    render json: { data: serialized_companies }
   end
 
   def show
