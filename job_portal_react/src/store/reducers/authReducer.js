@@ -17,6 +17,11 @@ const authReducer = (state = initialState, action) => {
         currUser: {},
         token: null,
       };
+    case "UPDATE_PROFILE_SUCCESS":
+      return {
+        ...state,
+        currUser: action.payload.user,
+      };
     default:
       return state;
   }

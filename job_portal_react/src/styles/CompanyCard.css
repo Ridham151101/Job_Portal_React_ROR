@@ -1,0 +1,159 @@
+.custom-card {
+  display: block;
+  position: relative;
+  width: 500px;
+  min-height: 300px;
+  background-color: #f2f8f9;
+  border-radius: 4px;
+  padding: 32px 24px;
+  margin: 12px;
+  text-decoration: none;
+  z-index: 0;
+  overflow: hidden;
+  border: 1px solid #f2f8f9;
+}
+
+.custom-card:hover {
+  transition: all 0.2s ease-out;
+  box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2);
+  top: -4px;
+  border: 1px solid #ccc;
+  background-color: white;
+}
+
+.custom-card:hover .go-arrow {
+  opacity: 1;
+}
+
+.custom-card:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -16px;
+  right: -16px;
+  background: #34487a;
+  height: 32px;
+  width: 32px;
+  border-radius: 32px;
+  transform: scale(2);
+  transform-origin: 50% 50%;
+  transition: transform 0.15s ease-out;
+}
+
+.custom-card:hover:before {
+  transform: scale(2.15);
+}
+
+.custom-card h3 {
+  margin-top: 8px;
+  color: #000; /* Change text color */
+}
+
+.custom-card p {
+  font-size: 14px;
+  color: #666;
+}
+
+.go-corner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  overflow: hidden;
+  top: 0;
+  right: 0;
+  background-color: #34487a;
+  border-radius: 0 4px 0 32px;
+  transition: margin-right 0.3s ease-out;
+}
+
+.go-arrow {
+  font-size: 50px;
+  margin-top: -4px;
+  margin-right: -4px;
+  color: white;
+  font-family: courier, sans;
+  transform: skew(-6deg);
+}
+
+.back-corner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  background-color: #34487a;
+  border-radius: 4px 0 32px 0;
+  transition: margin-left 0.3s ease-out;
+}
+
+.job-card {
+  display: block;
+  position: relative;
+  width: 500px;
+  min-height: 300px;
+  background-color: #f2f8f9;
+  border-radius: 4px;
+  padding: 32px 24px;
+  margin: 12px;
+  text-decoration: none;
+  z-index: 0;
+  overflow: hidden;
+  border: 1px solid #f2f8f9;
+  text-align: center;
+}
+
+.back-arrow {
+  font-size: 50px;
+  margin-top: -4px;
+  margin-right: -4px;
+  color: white;
+  font-family: courier, sans;
+  transform: skew(-6deg);
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  bottom: 20px;
+  right: 24px;
+}
+
+.buttons button {
+  padding: 6px 12px;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-button {
+  background-color: #dc2a74;
+  color: white;
+}
+
+.edit-button {
+  background-color: #34487a !important;
+  color: white !important;
+}
+
+.show-user {
+  background-color: #5e709c !important;
+  color: white !important;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+}

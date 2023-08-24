@@ -21,7 +21,7 @@ img {
 }
 
 #card {
-  background: transparent;
+  background: rgba(0, 0, 0, 0.5);
   border: 3px solid #adb5bd;
   border-radius: 10px;
   color: #fff;

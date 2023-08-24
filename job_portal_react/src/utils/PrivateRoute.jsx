@@ -1,12 +1,13 @@
-import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { memo } from "react";
+import { Navigate, Outlet } from "react-router-dom";
 
-function Private({ children }) {
-  const token = useSelector((state) => state.auth.token);
+function Private() {
+  const token = localStorage.getItem("token");
 
   if (token === null) {
-    return <Navigate to="/" replace />;
+    return <Navigate replace to="/" />;
   }
-  return children;
+  return <Outlet />;
 }
-export default Private;
+
+export default memo(Private);

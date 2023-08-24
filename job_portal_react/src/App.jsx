@@ -5,16 +5,22 @@ import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import "./App.css";
 import NotFound from "./pages/NotFound";
-import Home from "./pages/Home";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Public from "./utils/PublicRoute";
 import Private from "./utils/PrivateRoute";
 import Navigationbar from "./components/Navigationbar";
+import UserProfile from "./pages/UserProfile";
+import Companies from "./pages/Companies";
+import AllCompanies from "./pages/AllCompanies";
+import JobSeekerJobs from "./pages/JobSeekerJobs";
+import DetailedCompanyCard from "./components/DetailedCompanyCard";
+import Jobs from "./pages/Jobs";
+import DetailedJobCard from "./components/DetailedJobCard";
 
 const App = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.token);
+  const currUserRole = useSelector((state) => state.auth.currUser.role);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("currUser"));
@@ -37,38 +43,28 @@ const App = () => {
       <BrowserRouter>
         {isLoggedIn !== null && <Navigationbar />}
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Public>
-                <LandingPage />
-              </Public>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <Public>
-                <Login />
-              </Public>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <Public>
-                <Registration />
-              </Public>
-            }
-          />
-          <Route
-            path="/home"
-            element={
-              <Private>
-                <Home />
-              </Private>
-            }
-          />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Registration />} />
+          <Route element={<Private />}>
+            <Route element={<UserProfile />} path="/profile" />
+            <Route
+              element={
+                currUserRole === "admin" ? <AllCompanies /> : <Companies />
+              }
+              path="/companies"
+            />
+            <Route
+              element={<DetailedCompanyCard />}
+              path="/companies/:companyId"
+            />
+            <Route element={<Jobs />} path="/companies/:companyId/jobs" />
+            <Route
+              element={<DetailedJobCard />}
+              path="/companies/:companyId/jobs/:jobId"
+            />
+            <Route element={<JobSeekerJobs />} path="/jobSeekerJobs" />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -24,15 +24,9 @@ export const loginUser = async (credentials) => {
   }
 };
 
-export const logoutUser = async (token) => {
-  const config = {
-    headers: {
-      Authorization: token,
-    },
-  };
-
+export const logoutUser = async () => {
   try {
-    const response = await axios.delete("http://localhost:3001/logout", config);
+    const response = await axiosInstance.delete("http://localhost:3001/logout");
     return response;
   } catch (error) {
     return error;

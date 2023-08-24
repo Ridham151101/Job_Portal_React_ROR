@@ -1,12 +1,11 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../store/actions/authActions";
-import { toast } from "react-toastify";
 import jobPortalImage from "../assets/jobportal.jpg";
-import FormInput from "../components/FormInput";
-import { Button } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
+import FormField from "../components/FormField";
 import "../styles/Registration.css";
-import RoleDropdown from "../components/RoleDropdown";
+import { toast } from "react-toastify";
 
 const Registration = () => {
   const [userData, setUserData] = useState({
@@ -17,18 +16,29 @@ const Registration = () => {
     passwordConfirmation: "",
     role: "job_creator",
   });
+  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const currUser = JSON.parse(localStorage.getItem("currUser"));
+    if (currUser !== null) {
+      const currUserRole = currUser.role;
+      // console.log("current User role: ", currUser);
+      if (currUserRole === "admin" || currUserRole === "job_creator") {
+        navigate("/companies");
+      } else if (currUserRole === "job_seeker") {
+        navigate("/jobSeekerJobs");
+      }
+    }
+  });
 
   const handleFieldChange = (name, value) => {
     setUserData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleRoleChange = (e) => {
-    handleFieldChange("role", e.target.value);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (isValidate()) {
       const res = await registerUser(userData);
       // console.log("response after registration: ", res.message);
@@ -45,24 +55,42 @@ const Registration = () => {
 
   const isValidate = () => {
     let isproceed = true;
-    let errmessage = "Please enter the value in ";
+    const errors = {};
 
-    for (const field in userData) {
-      if (!userData[field]) {
-        isproceed = false;
-        errmessage += field.charAt(0).toUpperCase() + field.slice(1) + ", ";
-      }
+    if (!userData.name) {
+      isproceed = false;
+      errors.name = "Please enter your name";
     }
 
-    if (!isproceed) {
-      toast.warning(errmessage.slice(0, -2));
-    } else {
-      if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(userData.email)) {
-        isproceed = false;
-        toast.warning("Please enter a valid email");
-      }
+    if (!userData.email) {
+      isproceed = false;
+      errors.email = "Please enter your email";
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(userData.email)
+    ) {
+      isproceed = false;
+      errors.email = "Please enter a valid email address";
     }
 
+    if (!userData.password) {
+      isproceed = false;
+      errors.password = "Please enter a password";
+    }
+
+    if (!userData.passwordConfirmation) {
+      isproceed = false;
+      errors.passwordConfirmation = "Please enter confirm your password";
+    } else if (userData.password !== userData.passwordConfirmation) {
+      isproceed = false;
+      errors.passwordConfirmation = "Passwords do not match";
+    }
+
+    if (!userData.gender) {
+      isproceed = false;
+      errors.gender = "Please select a gender";
+    }
+
+    setFieldErrors(errors);
     return isproceed;
   };
 
@@ -71,9 +99,9 @@ const Registration = () => {
       <div className="mainContainer">
         <img src={jobPortalImage} alt="Job Portal Image" />
       </div>
-      <div className="">
+      <div className="vh-100 p-4 d-flex align-items-center">
         <div className="offset-lg-4 col-lg-4">
-          <form
+          <Form
             className="container"
             style={{ textAlign: "left" }}
             onSubmit={handleSubmit}
@@ -83,69 +111,74 @@ const Registration = () => {
                 <h1>Registration</h1>
               </div>
               <div className="card-body">
-                <div className="row">
-                  <div className="col-lg-6">
-                    <FormInput
-                      label="Name"
-                      value={userData.name}
-                      onChange={(value) => handleFieldChange("name", value)}
-                    />
-                  </div>
-                  <div className="col-lg-6">
-                    <FormInput
-                      label="Email"
-                      value={userData.email}
-                      onChange={(value) => handleFieldChange("email", value)}
-                    />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-lg-6">
-                    <FormInput
-                      label="Password"
-                      value={userData.password}
-                      type="password"
-                      onChange={(value) => handleFieldChange("password", value)}
-                    />
-                  </div>
-                  <div className="col-lg-6">
-                    <FormInput
-                      label="Password Confirmation"
-                      value={userData.passwordConfirmation}
-                      type="password"
-                      onChange={(value) =>
-                        handleFieldChange("passwordConfirmation", value)
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="col-lg-6">
-                  <FormInput
-                    type="radio"
-                    label="Gender"
-                    value={userData.gender}
-                    onChange={(value) => handleFieldChange("gender", value)}
-                    options={[
-                      { label: "Male", value: "male" },
-                      { label: "Female", value: "female" },
-                    ]}
-                  />
-                </div>
-                <div className="col-lg-6">
-                  <RoleDropdown
-                    value={userData.role}
-                    onChange={handleRoleChange}
-                  />
-                </div>
+                <FormField
+                  controlId="name"
+                  label="Name"
+                  type="text"
+                  value={userData.name}
+                  onChange={(e) => handleFieldChange("name", e.target.value)}
+                  isInvalid={!!fieldErrors.name}
+                  feedbackText={fieldErrors.name}
+                />
+                <FormField
+                  controlId="email"
+                  label="Email"
+                  type="text"
+                  value={userData.email}
+                  onChange={(e) => handleFieldChange("email", e.target.value)}
+                  isInvalid={!!fieldErrors.email}
+                  feedbackText={fieldErrors.email}
+                />
+                <FormField
+                  controlId="password"
+                  label="Password"
+                  type="password"
+                  value={userData.password}
+                  onChange={(e) =>
+                    handleFieldChange("password", e.target.value)
+                  }
+                  isInvalid={!!fieldErrors.password}
+                  feedbackText={fieldErrors.password}
+                />
+                <FormField
+                  controlId="passwordConfirmation"
+                  label="Password Confirmation"
+                  type="password"
+                  value={userData.passwordConfirmation}
+                  onChange={(e) =>
+                    handleFieldChange("passwordConfirmation", e.target.value)
+                  }
+                  isInvalid={!!fieldErrors.passwordConfirmation}
+                  feedbackText={fieldErrors.passwordConfirmation}
+                />
+                <FormField
+                  controlId="gender"
+                  label="Gender"
+                  type="radio"
+                  value={userData.gender}
+                  onChange={(e) => handleFieldChange("gender", e.target.value)}
+                  isInvalid={!!fieldErrors.gender}
+                  feedbackText={fieldErrors.gender}
+                  options={[
+                    { label: "Male", value: "male" },
+                    { label: "Female", value: "female" },
+                  ]}
+                />
+                <FormField
+                  controlId="role"
+                  label="Role"
+                  type="select"
+                  value={userData.role}
+                  onChange={(e) => handleFieldChange("role", e.target.value)}
+                  options={[
+                    { label: "Job Creator", value: "job_creator" },
+                    { label: "Job Seeker", value: "job_seeker" },
+                  ]}
+                />
               </div>
               <div id="card-footer" className="card-footer">
                 <center>
-                  <Button
-                    // variant="contained"
-                    // color="secondary"
-                    type="submit"
-                    id="register-button"
-                  >
+                  <Button type="submit" id="register-button">
                     Register
                   </Button>
                 </center>
@@ -156,7 +189,7 @@ const Registration = () => {
                 </center>
               </div>
             </div>
-          </form>
+          </Form>
         </div>
       </div>
     </>

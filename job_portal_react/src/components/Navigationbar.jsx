@@ -10,27 +10,32 @@ import { toast } from "react-toastify";
 const Navigationbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.auth.token);
+  const currUserRole = useSelector((state) => state.auth.currUser.role);
+
+  const getHomePath = () => {
+    if (currUserRole === "admin" || currUserRole === "job_creator") {
+      return "/companies";
+    } else {
+      return "/jobSeekerJobs";
+    }
+  };
 
   const handleLogout = async () => {
     const isConfirmed = window.confirm("Are you sure you want to logout?");
 
     if (isConfirmed) {
-      const res = await logoutUser(token);
-      console.log("logout api res: ", res);
+      const res = await logoutUser();
+      // console.log("logout api res: ", res);
       if (res.message === "Network Error") {
         toast.error("Network Error, Check your server");
       } else if (res.response?.status >= 400 && res?.response?.status <= 499) {
         toast.error("There are some problem in logout");
       } else {
+        console.log("hello in navigation bar");
         dispatch({ type: "LOGOUT" });
         localStorage.clear();
-        toast.success("Logged Out Successfully");
         navigate("/");
       }
-    } else {
-      // If "No" is clicked, return to the homepage
-      navigate("/home");
     }
   };
 
@@ -48,8 +53,11 @@ const Navigationbar = () => {
           <Nav className="ms-auto d-flex align-items-center gap-3">
             <>
               {/* Common buttons for all logged-in users */}
-              <Link to="/home" className="navbar-link">
+              <Link to={getHomePath()} className="navbar-link">
                 Home
+              </Link>
+              <Link to="/profile" className="navbar-link">
+                Profile
               </Link>
             </>
 
