@@ -3,11 +3,13 @@ import { useParams } from "react-router-dom";
 import axiosInstance from "../api/axios-interceptor";
 import { Link } from "react-router-dom";
 import "../styles/DetailedCompanyCard.css";
+import { useSelector } from "react-redux";
 
 const DetailedJobCard = () => {
   const { companyId, jobId } = useParams();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
+  const userRole = useSelector((state) => state.auth.currUser.role);
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -41,15 +43,21 @@ const DetailedJobCard = () => {
         <div className="company-details">
           <p>Location: {job.location}</p>
           <p>Requirments: {job.requirments}</p>
-          <p>Salary: {job.salary}</p>
+          <p>Salary: {job.salary} LPA</p>
           <p>Openings: {job.openings}</p>
           <p>Status: {job.status}</p>
         </div>
 
         <div className="back-button">
-          <Link to={`/companies/${companyId}/jobs`} className="back-link">
-            Back to Jobs
-          </Link>
+          {userRole === "job_seeker" ? (
+            <Link to={`/jobSeekerJobs`} className="back-link">
+              Back to Jobs
+            </Link>
+          ) : (
+            <Link to={`/companies/${companyId}/jobs`} className="back-link">
+              Back to Jobs
+            </Link>
+          )}
         </div>
       </div>
     </div>

@@ -6,5 +6,5 @@ class JobApplication < ApplicationRecord
   validates :name, presence: true
   validates :resume, content_type: { content_type: ['application/pdf'], message: 'only PDF files are allowed' }, presence: :true
   validates :email, presence: true, uniqueness: true
-  validates :phone_number,format:  { with: /\A\+\d{2}-\d{10}\z/}
+  validates :phone_number,format:  { with: /\A\d{10}\z/}
 end

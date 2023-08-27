@@ -31,7 +31,7 @@ const Navigationbar = () => {
       } else if (res.response?.status >= 400 && res?.response?.status <= 499) {
         toast.error("There are some problem in logout");
       } else {
-        console.log("hello in navigation bar");
+        // console.log("hello in navigation bar");
         dispatch({ type: "LOGOUT" });
         localStorage.clear();
         navigate("/");
@@ -60,6 +60,17 @@ const Navigationbar = () => {
                 Profile
               </Link>
             </>
+
+            {currUserRole === "job_seeker" && (
+              <>
+                <Link to="/job_applications" className="navbar-link">
+                  Applied Jobs
+                </Link>
+                <Link to="/portfolios" className="navbar-link">
+                  Portfolio
+                </Link>
+              </>
+            )}
 
             <Button id="logout-button" variant="danger" onClick={handleLogout}>
               Logout

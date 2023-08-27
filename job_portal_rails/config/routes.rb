@@ -14,12 +14,14 @@ Rails.application.routes.draw do
       resource :profile, only: [:update]
       resources :portfolios, only: [:index, :create, :show, :update, :destroy]
       resources :companies, only: [:index, :show, :create, :update, :destroy] do
+        resources :reviews, only: [:index, :create]
         resources :jobs, only: [:index, :show, :create, :update, :destroy] do
-          put 'open', on: :member
-          put 'close', on: :member
+          get :job_applicants, on: :member
           resources :job_applications, only: [:index, :create]
         end
       end
+      get '/open_jobs', to: 'jobs#open_jobs'
+      get '/job_applications', to: 'job_applications#current_user_job_applications'
     end
   end
 end

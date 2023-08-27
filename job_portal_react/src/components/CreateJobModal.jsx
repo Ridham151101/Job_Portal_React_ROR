@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
 const CreateJobModal = ({ show, onHide, onSave }) => {
@@ -8,7 +8,7 @@ const CreateJobModal = ({ show, onHide, onSave }) => {
     requirments: "",
     salary: "",
     openings: "",
-    status: "true",
+    status: "",
   });
 
   const [validationErrors, setValidationErrors] = useState({
@@ -39,12 +39,12 @@ const CreateJobModal = ({ show, onHide, onSave }) => {
     if (!newJob.status) errors.status = "Status is required";
     if (!newJob.salary) {
       errors.salary = "Salary is required";
-    } else if (!/^\d+$/.test(job.salary)) {
+    } else if (!/^\d+$/.test(newJob.salary)) {
       errors.salary = "Invalid salary format";
     }
     if (!newJob.openings) {
       errors.openings = "Openings is required";
-    } else if (!/^\d$/.test(newJob.openings)) {
+    } else if (!/^\d+$/.test(newJob.openings)) {
       errors.openings = "openings must be a number";
     }
 
@@ -89,7 +89,7 @@ const CreateJobModal = ({ show, onHide, onSave }) => {
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="salary">
-            <Form.Label>Salary</Form.Label>
+            <Form.Label>Salary(LPA)</Form.Label>
             <Form.Control
               type="text"
               name="salary"
@@ -140,8 +140,8 @@ const CreateJobModal = ({ show, onHide, onSave }) => {
               isInvalid={!!validationErrors.status}
             >
               <option value="">Select status</option>
-              <option value="Open">Open</option>
-              <option value="Closed">Closed</option>
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
             </Form.Control>
             <Form.Control.Feedback type="invalid">
               {validationErrors.status}

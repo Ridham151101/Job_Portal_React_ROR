@@ -16,6 +16,10 @@ import JobSeekerJobs from "./pages/JobSeekerJobs";
 import DetailedCompanyCard from "./components/DetailedCompanyCard";
 import Jobs from "./pages/Jobs";
 import DetailedJobCard from "./components/DetailedJobCard";
+import DisplayJobApplications from "./pages/DisplayJobApplications";
+import JobSeekerJobApplicationsTable from "./pages/JobSeekerJobApplicationsTable";
+import Portfolio from "./pages/Portfolio";
+import CompanyReview from "./pages/CompanyReview";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -63,7 +67,20 @@ const App = () => {
               element={<DetailedJobCard />}
               path="/companies/:companyId/jobs/:jobId"
             />
+            <Route
+              element={<DisplayJobApplications />}
+              path="/companies/:companyId/jobs/:jobId/job_applicants"
+            />
             <Route element={<JobSeekerJobs />} path="/jobSeekerJobs" />
+            <Route
+              element={<JobSeekerJobApplicationsTable />}
+              path="/job_applications"
+            />
+            <Route element={<Portfolio />} path="/portfolios" />
+            <Route
+              element={<CompanyReview />}
+              path="/companies/:companyId/reviews"
+            />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

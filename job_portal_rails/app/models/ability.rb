@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Ability
   include CanCan::Ability
 
@@ -9,11 +7,13 @@ class Ability
     elsif user.has_role?(:job_creator)
       can :manage, Company, company_creator_id: user.id
       can :manage, Job, job_creator_id: user.id
+      can :read, Review
       cannot :manage, JobApplication
     elsif user.has_role?(:job_seeker)
-      cannot :manage, Company
-      cannot :manage, Job
+      can :read, Job, status: 'open'
+      can :read, Company
       can :manage, JobApplication, job_seeker_id: user.id
+      can :manage, Review, job_seeker_id: user.id
     end
   end
 end

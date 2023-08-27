@@ -178,12 +178,12 @@ const Registration = () => {
               </div>
               <div id="card-footer" className="card-footer">
                 <center>
-                  <Button type="submit" id="register-button">
+                  <Button type="submit" id="login">
                     Register
                   </Button>
                 </center>
                 <center>
-                  <Link to="/login">
+                  <Link id="account-request" to="/login">
                     <u>Do You Have an Account?</u>
                   </Link>
                 </center>

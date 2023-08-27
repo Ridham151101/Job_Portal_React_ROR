@@ -1,12 +1,18 @@
 class Api::V1::JobsController < ApplicationController
+  skip_load_and_authorize_resource only: [:open_jobs, :show]
   load_and_authorize_resource
-  before_action :set_company
-  before_action :set_job, only: %i[show update destroy]
+  before_action :set_company, except: %i[open_jobs]
+  before_action :set_job, only: %i[show update destroy job_applicants]
 
   def index
     @jobs = @company.jobs
-    serialized_jobs = @jobs.map { |job| JobSerializer.new(job).serializable_hash[:data][:attributes] }
-    render json: { data: serialized_jobs }
+    @serialized_jobs = @jobs.map do |job|
+      serialized_job = JobSerializer.new(job).serializable_hash[:data][:attributes]
+      serialized_job[:company_id] = job.company.id # Add company_id to the attributes
+      serialized_job
+    end
+    # serialized_jobs = @jobs.map { |job| JobSerializer.new(job).serializable_hash[:data][:attributes] }
+    render json: { data: @serialized_jobs }
   end
 
   def show
@@ -49,20 +55,22 @@ class Api::V1::JobsController < ApplicationController
     end
   end
 
-  def open
-    @job.update(status: "open")
-    render json: {
-      status: { code: 200, message: 'Job Opened Successfully.' },
-      data: @job.status
-    }, status: :ok
+  def open_jobs
+    authorize! :read, Job, status: 'open' # Manually authorize the action
+    
+    @open_jobs = Job.where(status: 'open')
+    @serialized_open_jobs = @open_jobs.map do |open_job|
+      serialized_job = JobSerializer.new(open_job).serializable_hash[:data][:attributes]
+      serialized_job[:company_id] = open_job.company.id # Add company_id to the attributes
+      serialized_job
+    end
+    render json: { data: @serialized_open_jobs }
   end
 
-  def close
-    @job.update(status: "closed")
-    render json: {
-      status: { code: 200, message: 'Job Closed Successfully.' },
-      data: { status: @job.status }
-    }, status: :ok
+  def job_applicants
+    @job_applications = @job.job_applications
+    @serialized_job_applications = @job_applications.map { |job_application| JobApplicationSerializer.new(job_application).serializable_hash[:data][:attributes] }
+    render json: { data: @serialized_job_applications }
   end
 
   private

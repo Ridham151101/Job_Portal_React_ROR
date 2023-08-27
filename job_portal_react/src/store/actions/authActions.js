@@ -26,7 +26,7 @@ export const loginUser = async (credentials) => {
 
 export const logoutUser = async () => {
   try {
-    const response = await axiosInstance.delete("http://localhost:3001/logout");
+    const response = await axiosInstance.delete("/logout");
     return response;
   } catch (error) {
     return error;

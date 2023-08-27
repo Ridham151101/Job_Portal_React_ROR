@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import axiosInstance from "../api/axios-interceptor";
 import JobCard from "../components/JobCard";
 import { useParams } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Alert, Button, ButtonGroup } from "react-bootstrap";
 import CreateJobModal from "../components/CreateJobModal";
 import EditJobModal from "../components/EditJobModal";
 
@@ -11,12 +11,13 @@ const Jobs = () => {
   const { companyId } = useParams();
   const [editJob, setEditJob] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState("all");
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         const response = await axiosInstance.get(
-          `http://localhost:3001/api/v1/companies/${companyId}/jobs`
+          `/api/v1/companies/${companyId}/jobs`
         );
         // console.log("jobs: ", response.data.data);
         setJobs(response.data.data);
@@ -31,7 +32,7 @@ const Jobs = () => {
   const handleCreateJobSave = async (newJobData) => {
     try {
       const response = await axiosInstance.post(
-        `http://localhost:3001/api/v1/companies/${companyId}/jobs`,
+        `/api/v1/companies/${companyId}/jobs`,
         newJobData
       );
 
@@ -49,7 +50,7 @@ const Jobs = () => {
   const handleUpdateJob = async (jobId, updatedData) => {
     try {
       await axiosInstance.patch(
-        `http://localhost:3001/api/v1/companies/${companyId}/jobs/${jobId}`,
+        `/api/v1/companies/${companyId}/jobs/${jobId}`,
         updatedData
       );
       const updatedJobs = jobs.map((j) =>
@@ -66,7 +67,7 @@ const Jobs = () => {
     async (job) => {
       try {
         await axiosInstance.delete(
-          `http://localhost:3001/api/v1/companies/${companyId}/jobs/${job.id}`
+          `/api/v1/companies/${companyId}/jobs/${job.id}`
         );
         const updatedJobs = jobs.filter((j) => j.id !== job.id);
         setJobs(updatedJobs);
@@ -85,14 +86,66 @@ const Jobs = () => {
     setShowCreateModal(false);
   };
 
+  const filteredJobs = useMemo(() => {
+    // console.log("Filtering jobs using useMemo");
+
+    if (currentStatus === "all") {
+      return jobs;
+    } else {
+      return jobs.filter((job) => job.status === currentStatus);
+    }
+  }, [jobs, currentStatus]);
+
   return (
     <>
       <div className="p-8">
-        <Button className="m-4" id="buttons" onClick={handleCreateJob}>
-          Create Job
-        </Button>
+        <div className="d-flex justify-content-between">
+          <Button className="m-4" id="buttons" onClick={handleCreateJob}>
+            Create Job
+          </Button>
+          <ButtonGroup className="m-4">
+            <Button
+              id="buttons"
+              variant={currentStatus === "all" ? "primary" : "outline-primary"}
+              onClick={() => setCurrentStatus("all")}
+            >
+              All Jobs
+            </Button>
+            <Button
+              id="buttons"
+              variant={currentStatus === "open" ? "primary" : "outline-primary"}
+              onClick={() => setCurrentStatus("open")}
+            >
+              Open Jobs
+            </Button>
+            <Button
+              id="buttons"
+              variant={
+                currentStatus === "closed" ? "primary" : "outline-primary"
+              }
+              onClick={() => setCurrentStatus("closed")}
+            >
+              Closed Jobs
+            </Button>
+          </ButtonGroup>
+        </div>
+        <div className="alert">
+          {jobs.length === 0 && (
+            <Alert
+              style={{
+                width: "50%",
+                textAlign: "center",
+                fontSize: "20px",
+              }}
+              variant="info"
+            >
+              No jobs are available.{" "}
+            </Alert>
+          )}
+        </div>
+
         <div className="m-4 d-flex flex-wrap justify-content-around">
-          {jobs.map((job) => (
+          {filteredJobs.map((job) => (
             <JobCard
               key={job.id}
               job={job}

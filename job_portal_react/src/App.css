@@ -32,3 +32,26 @@
   font-family: sans-serif;
   font-size: 16px;
 }
+
+.alert {
+  display: flex;
+  justify-content: center;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+}
+
+.apply-job-button {
+  background-color: #5e709c !important;
+  color: white !important;
+  font-size: 20px !important;
+  border-radius: 10px !important;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+}

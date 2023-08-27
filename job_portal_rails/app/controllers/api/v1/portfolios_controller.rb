@@ -3,7 +3,8 @@ class Api::V1::PortfoliosController < ApplicationController
 
   def index
     @portfolios = current_user.portfolios
-    render json: @portfolios, each_serializer: PortfolioSerializer
+    @serialized_portfolios = @portfolios.map { |portfolio| PortfolioSerializer.new(portfolio).serializable_hash[:data][:attributes] }
+    render json: { data: @serialized_portfolios }
   end
 
   def show

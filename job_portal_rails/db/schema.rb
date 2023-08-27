@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_08_19_172135) do
+ActiveRecord::Schema.define(version: 2023_08_26_201207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -100,6 +100,17 @@ ActiveRecord::Schema.define(version: 2023_08_19_172135) do
     t.index ["user_id"], name: "index_portfolios_on_user_id"
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.text "review_text"
+    t.integer "rating"
+    t.bigint "job_seeker_id", null: false
+    t.bigint "company_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["company_id"], name: "index_reviews_on_company_id"
+    t.index ["job_seeker_id"], name: "index_reviews_on_job_seeker_id"
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string "name"
     t.string "resource_type"
@@ -142,4 +153,6 @@ ActiveRecord::Schema.define(version: 2023_08_19_172135) do
   add_foreign_key "jobs", "companies"
   add_foreign_key "jobs", "users", column: "job_creator_id"
   add_foreign_key "portfolios", "users"
+  add_foreign_key "reviews", "companies"
+  add_foreign_key "reviews", "users", column: "job_seeker_id"
 end

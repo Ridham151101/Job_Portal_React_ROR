@@ -49,7 +49,7 @@ class Api::V1::CompaniesController < ApplicationController
   private
 
   def set_company
-    @company = current_user.companies.find(params[:id])
+    @company = Company.find(params[:id])
   end
 
   def company_params

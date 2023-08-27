@@ -123,12 +123,12 @@ const Login = () => {
               </div>
               <div id="card-footer" className="card-footer">
                 <center>
-                  <Button type="submit" id="register-button">
+                  <Button type="submit" id="login">
                     Login
                   </Button>
                 </center>
                 <center>
-                  <Link to="/signup">
+                  <Link id="account-request" to="/signup">
                     <u>Create New Account?</u>
                   </Link>
                 </center>
