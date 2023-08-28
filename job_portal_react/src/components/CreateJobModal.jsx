@@ -41,6 +41,11 @@ const CreateJobModal = ({ show, onHide, onSave }) => {
       errors.salary = "Salary is required";
     } else if (!/^\d+$/.test(newJob.salary)) {
       errors.salary = "Invalid salary format";
+    } else {
+      const salaryValue = parseInt(newJob.salary, 10);
+      if (salaryValue < 1 || salaryValue > 1000) {
+        errors.salary = "Salary must be between 1 and 1000";
+      }
     }
     if (!newJob.openings) {
       errors.openings = "Openings is required";

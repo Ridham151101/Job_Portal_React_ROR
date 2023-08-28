@@ -32,6 +32,21 @@ const Login = () => {
 
   const handleFieldChange = (name, value) => {
     setCredentials((prevData) => ({ ...prevData, [name]: value }));
+    validateField(name, value);
+  };
+
+  const validateField = (name, value) => {
+    const errorsCopy = { ...fieldErrors };
+    if (name === "email") {
+      errorsCopy.email = !value
+        ? "Please enter your email"
+        : /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
+        ? ""
+        : "Please enter a valid email address";
+    } else if (name === "password") {
+      errorsCopy.password = !value ? "Please enter a password" : "";
+    }
+    setFieldErrors(errorsCopy);
   };
 
   const ProceedLogin = async (e) => {
@@ -61,26 +76,11 @@ const Login = () => {
   };
 
   const isValidate = () => {
-    let isproceed = true;
     const errors = {};
-
-    if (!credentials.email) {
-      isproceed = false;
-      errors.email = "Please enter your email";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(credentials.email)
-    ) {
-      isproceed = false;
-      errors.email = "Please enter a valid email address";
-    }
-
-    if (!credentials.password) {
-      isproceed = false;
-      errors.password = "Please enter a password";
-    }
-
+    if (!credentials.email) errors.email = "Please enter your email";
+    if (!credentials.password) errors.password = "Please enter a password";
     setFieldErrors(errors);
-    return isproceed;
+    return Object.keys(errors).length === 0;
   };
 
   return (

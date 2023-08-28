@@ -34,6 +34,45 @@ const Registration = () => {
 
   const handleFieldChange = (name, value) => {
     setUserData((prevData) => ({ ...prevData, [name]: value }));
+    validateField(name, value);
+  };
+
+  const validateField = (name, value) => {
+    const errorsCopy = { ...fieldErrors };
+
+    if (name === "name") {
+      errorsCopy.name = value ? "" : "Please enter your name";
+    }
+
+    if (name === "email") {
+      if (!value) {
+        errorsCopy.email = "Please enter your email";
+      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+        errorsCopy.email = "Please enter a valid email address";
+      } else {
+        errorsCopy.email = "";
+      }
+    }
+
+    if (name === "password") {
+      errorsCopy.password = value ? "" : "Please enter a password";
+    }
+
+    if (name === "passwordConfirmation") {
+      if (!value) {
+        errorsCopy.passwordConfirmation = "Please enter confirm your password";
+      } else if (value !== userData.password) {
+        errorsCopy.passwordConfirmation = "Passwords do not match";
+      } else {
+        errorsCopy.passwordConfirmation = "";
+      }
+    }
+
+    if (name === "gender") {
+      errorsCopy.gender = value ? "" : "Please select a gender";
+    }
+
+    setFieldErrors(errorsCopy);
   };
 
   const handleSubmit = async (e) => {
@@ -54,44 +93,36 @@ const Registration = () => {
   };
 
   const isValidate = () => {
-    let isproceed = true;
     const errors = {};
 
     if (!userData.name) {
-      isproceed = false;
       errors.name = "Please enter your name";
     }
 
     if (!userData.email) {
-      isproceed = false;
       errors.email = "Please enter your email";
     } else if (
       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(userData.email)
     ) {
-      isproceed = false;
       errors.email = "Please enter a valid email address";
     }
 
     if (!userData.password) {
-      isproceed = false;
       errors.password = "Please enter a password";
     }
 
     if (!userData.passwordConfirmation) {
-      isproceed = false;
-      errors.passwordConfirmation = "Please enter confirm your password";
+      errors.passwordConfirmation = "Please confirm your password";
     } else if (userData.password !== userData.passwordConfirmation) {
-      isproceed = false;
       errors.passwordConfirmation = "Passwords do not match";
     }
 
     if (!userData.gender) {
-      isproceed = false;
       errors.gender = "Please select a gender";
     }
 
     setFieldErrors(errors);
-    return isproceed;
+    return Object.keys(errors).length === 0;
   };
 
   return (
