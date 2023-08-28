@@ -1,9 +1,25 @@
 import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import jobPortalImage from "../assets/jobportal.jpg";
 import "../styles/LandingPage.css";
+import { useEffect } from "react";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const currUser = JSON.parse(localStorage.getItem("currUser"));
+    if (currUser !== null) {
+      const currUserRole = currUser.role;
+      // console.log("current User role: ", currUser);
+      if (currUserRole === "admin" || currUserRole === "job_creator") {
+        navigate("/companies");
+      } else if (currUserRole === "job_seeker") {
+        navigate("/jobSeekerJobs");
+      }
+    }
+  });
+
   return (
     <>
       <div className="main-container">

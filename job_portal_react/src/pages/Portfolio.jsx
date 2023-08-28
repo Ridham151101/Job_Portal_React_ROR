@@ -15,18 +15,18 @@ function Portfolio() {
   const [selectedPortfolio, setSelectedPortfolio] = useState(null);
 
   useEffect(() => {
-    const fetchPortfolios = async () => {
-      try {
-        const response = await axiosInstance.get("/api/v1/portfolios");
-        setPortfolios(response.data.data);
-        // console.log("portfolio response:", response.data.data);
-      } catch (error) {
-        console.error("Error fetching Portfolios:", error);
-      }
-    };
-
     fetchPortfolios();
   }, []);
+
+  const fetchPortfolios = async () => {
+    try {
+      const response = await axiosInstance.get("/api/v1/portfolios");
+      setPortfolios(response.data.data);
+      // console.log("portfolio response:", response.data.data);
+    } catch (error) {
+      console.error("Error fetching Portfolios:", error);
+    }
+  };
 
   const handleCreateModalOpen = () => {
     setShowCreateModal(true);
@@ -49,10 +49,11 @@ function Portfolio() {
   const handleCreatePortfolio = async (formData) => {
     try {
       const response = await axiosInstance.post("/api/v1/portfolios", formData);
-      setPortfolios((prevPortfolios) => [
-        ...prevPortfolios,
-        response.data.data,
-      ]);
+      // setPortfolios((prevPortfolios) => [
+      //   ...prevPortfolios,
+      //   response.data.data,
+      // ]);
+      await fetchPortfolios();
       handleCreateModalClose();
     } catch (error) {
       console.error("Error creating portfolio:", error);
@@ -65,10 +66,11 @@ function Portfolio() {
         `/api/v1/portfolios/${portfolioId}`,
         updatedData
       );
-      const updatedPortfolios = portfolios.map((p) =>
-        p.id === portfolioId ? { ...p, ...updatedData } : p
-      );
-      setPortfolios(updatedPortfolios);
+      // const updatedPortfolios = portfolios.map((p) =>
+      //   p.id === portfolioId ? { ...p, ...updatedData } : p
+      // );
+      // setPortfolios(updatedPortfolios);
+      await fetchPortfolios();
       handleEditModalClose();
     } catch (error) {
       console.error("Error updating portfolio:", error);
@@ -78,8 +80,9 @@ function Portfolio() {
   const handleDeletePortfolio = async (portfolioId) => {
     try {
       await axiosInstance.delete(`/api/v1/portfolios/${portfolioId}`);
-      const updatedPortfolios = portfolios.filter((p) => p.id !== portfolioId);
-      setPortfolios(updatedPortfolios);
+      // const updatedPortfolios = portfolios.filter((p) => p.id !== portfolioId);
+      // setPortfolios(updatedPortfolios);
+      await fetchPortfolios();
       toast.success("Portfolio Deleted Successfully.");
     } catch (error) {
       console.log("error in delete Portfolio: ", error);

@@ -54,6 +54,11 @@ const ApplyJobModal = ({ show, onHide, onSave }) => {
       }
     }
 
+    const phoneNumberPattern = /^\d{10}$/;
+    if (!phoneNumberPattern.test(formData.phone_number)) {
+      errors.phone_number = "Phone number must be a 10-digit number";
+    }
+
     setValidationErrors(errors);
 
     if (Object.keys(errors).length === 0) {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axios-interceptor";
 import { useNavigate, useParams } from "react-router-dom";
-import { Alert, Button } from "react-bootstrap";
+import { Alert, Button, Table } from "react-bootstrap";
 import JobApplicationTable from "../components/JobApplicationTable";
 
 const DisplayJobApplications = () => {
@@ -52,12 +52,32 @@ const DisplayJobApplications = () => {
         )}
 
         <div className="m-4 d-flex flex-wrap justify-content-around">
-          {jobApplications.map((jobApplication) => (
-            <JobApplicationTable
-              key={jobApplication.id}
-              jobApplication={jobApplication}
-            />
-          ))}
+          <Table responsive striped bordered hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Address</th>
+                <th>Notice Period</th>
+                <th>CCTC</th>
+                <th>ECTC</th>
+                <th>Experience</th>
+                <th>Resume URL</th>
+                <th>Submitted At</th>
+              </tr>
+            </thead>
+            <tbody>
+              {jobApplications.map((jobApplication, index) => (
+                <JobApplicationTable
+                  key={jobApplication.id}
+                  jobApplication={jobApplication}
+                  index={index + 1}
+                />
+              ))}
+            </tbody>
+          </Table>
         </div>
       </div>
     </>

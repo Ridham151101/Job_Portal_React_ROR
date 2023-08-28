@@ -1,4 +1,5 @@
 import axios from "axios";
+import axiosInstance from "../../api/axios-interceptor";
 
 export const registerUser = async (userData) => {
   try {

@@ -15,17 +15,17 @@ const Companies = () => {
   const companiesPerPage = 6;
 
   useEffect(() => {
-    const fetchUserCompanies = async () => {
-      try {
-        const response = await axiosInstance.get("/api/v1/companies");
-        setUserCompanies(response.data.data);
-      } catch (error) {
-        console.error("Error fetching user companies:", error);
-      }
-    };
-
     fetchUserCompanies();
   }, []);
+
+  const fetchUserCompanies = async () => {
+    try {
+      const response = await axiosInstance.get("/api/v1/companies");
+      setUserCompanies(response.data.data);
+    } catch (error) {
+      console.error("Error fetching user companies:", error);
+    }
+  };
 
   const handleCreateCompanySave = async (newCompanyData) => {
     try {
@@ -34,10 +34,11 @@ const Companies = () => {
         newCompanyData
       );
 
-      setUserCompanies((prevCompanies) => [
-        ...prevCompanies,
-        response.data.data,
-      ]);
+      // setUserCompanies((prevCompanies) => [
+      //   ...prevCompanies,
+      //   response.data.data,
+      // ]);
+      await fetchUserCompanies();
       setShowCreateModal(false);
     } catch (error) {
       console.error("Error creating company:", error);
@@ -51,10 +52,11 @@ const Companies = () => {
   const handleUpdateCompany = async (companyId, updatedData) => {
     try {
       await axiosInstance.patch(`/api/v1/companies/${companyId}`, updatedData);
-      const updatedCompanies = userCompanies.map((c) =>
-        c.id === companyId ? { ...c, ...updatedData } : c
-      );
-      setUserCompanies(updatedCompanies);
+      // const updatedCompanies = userCompanies.map((c) =>
+      //   c.id === companyId ? { ...c, ...updatedData } : c
+      // );
+      // setUserCompanies(updatedCompanies);
+      await fetchUserCompanies();
       setEditCompany(null);
     } catch (error) {
       console.error("Error updating company:", error);
@@ -65,10 +67,11 @@ const Companies = () => {
     async (company) => {
       try {
         await axiosInstance.delete(`/api/v1/companies/${company.id}`);
-        const updatedCompanies = userCompanies.filter(
-          (c) => c.id !== company.id
-        );
-        setUserCompanies(updatedCompanies);
+        // const updatedCompanies = userCompanies.filter(
+        //   (c) => c.id !== company.id
+        // );
+        // setUserCompanies(updatedCompanies);
+        await fetchUserCompanies();
       } catch (error) {
         console.error("Error deleting company:", error);
       }

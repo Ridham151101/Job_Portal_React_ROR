@@ -14,20 +14,20 @@ const Jobs = () => {
   const [currentStatus, setCurrentStatus] = useState("all");
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const response = await axiosInstance.get(
-          `/api/v1/companies/${companyId}/jobs`
-        );
-        // console.log("jobs: ", response.data.data);
-        setJobs(response.data.data);
-      } catch (error) {
-        console.error("Error fetching Jobs:", error);
-      }
-    };
-
     fetchJobs();
   }, []);
+
+  const fetchJobs = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/v1/companies/${companyId}/jobs`
+      );
+      // console.log("jobs: ", response.data.data);
+      setJobs(response.data.data);
+    } catch (error) {
+      console.error("Error fetching Jobs:", error);
+    }
+  };
 
   const handleCreateJobSave = async (newJobData) => {
     try {
@@ -36,7 +36,8 @@ const Jobs = () => {
         newJobData
       );
 
-      setJobs((prevJobs) => [...prevJobs, response.data.data]);
+      await fetchJobs();
+      // setJobs((prevJobs) => [...prevJobs, response.data.data]);
       setShowCreateModal(false);
     } catch (error) {
       console.error("Error creating Job:", error);
@@ -53,10 +54,11 @@ const Jobs = () => {
         `/api/v1/companies/${companyId}/jobs/${jobId}`,
         updatedData
       );
-      const updatedJobs = jobs.map((j) =>
-        j.id === jobId ? { ...j, ...updatedData } : j
-      );
-      setJobs(updatedJobs);
+      // const updatedJobs = jobs.map((j) =>
+      //   j.id === jobId ? { ...j, ...updatedData } : j
+      // );
+      // setJobs(updatedJobs);
+      await fetchJobs();
       setEditJob(null);
     } catch (error) {
       console.error("Error updating Job:", error);
@@ -69,8 +71,9 @@ const Jobs = () => {
         await axiosInstance.delete(
           `/api/v1/companies/${companyId}/jobs/${job.id}`
         );
-        const updatedJobs = jobs.filter((j) => j.id !== job.id);
-        setJobs(updatedJobs);
+        // const updatedJobs = jobs.filter((j) => j.id !== job.id);
+        // setJobs(updatedJobs);
+        await fetchJobs();
       } catch (error) {
         console.error("Error deleting Job:", error);
       }
