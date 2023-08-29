@@ -10,16 +10,57 @@ const EditCompanyModal = React.memo(({ company, show, onHide, onSave }) => {
     phone_number: company.phone_number,
   });
 
+  const [validationErrors, setValidationErrors] = useState({});
+
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setUpdatedCompany((prevCompany) => ({
       ...prevCompany,
       [name]: value,
     }));
+    setValidationErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
   }, []);
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhoneNumber = (phoneNumber) => {
+    const phoneNumberRegex = /^\d{10}$/;
+    return phoneNumberRegex.test(phoneNumber);
+  };
+
   const handleSave = useCallback(() => {
-    onSave(updatedCompany);
+    const errors = {};
+    if (!updatedCompany.name) {
+      errors.name = "Name is required";
+    }
+    if (!updatedCompany.description) {
+      errors.description = "Description is required";
+    }
+    if (!updatedCompany.address) {
+      errors.address = "Address is required";
+    }
+    if (!updatedCompany.email) {
+      errors.email = "Email is required";
+    } else if (!validateEmail(updatedCompany.email)) {
+      errors.email = "Invalid email format";
+    }
+    if (!updatedCompany.phone_number) {
+      errors.phone_number = "Contact is required";
+    } else if (!validatePhoneNumber(updatedCompany.phone_number)) {
+      errors.phone_number = "Invalid phone number format";
+    }
+
+    setValidationErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
+      onSave(updatedCompany);
+    }
   }, [onSave, updatedCompany]);
 
   return (
@@ -36,7 +77,11 @@ const EditCompanyModal = React.memo(({ company, show, onHide, onSave }) => {
               name="name"
               value={updatedCompany.name}
               onChange={handleInputChange}
+              isInvalid={!!validationErrors.name}
             />
+            <Form.Control.Feedback type="invalid">
+              {validationErrors.name}
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="address">
             <Form.Label>Address</Form.Label>
@@ -45,7 +90,11 @@ const EditCompanyModal = React.memo(({ company, show, onHide, onSave }) => {
               name="address"
               value={updatedCompany.address}
               onChange={handleInputChange}
+              isInvalid={!!validationErrors.address}
             />
+            <Form.Control.Feedback type="invalid">
+              {validationErrors.address}
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="email">
             <Form.Label>Email</Form.Label>
@@ -54,7 +103,11 @@ const EditCompanyModal = React.memo(({ company, show, onHide, onSave }) => {
               name="email"
               value={updatedCompany.email}
               onChange={handleInputChange}
+              isInvalid={!!validationErrors.email}
             />
+            <Form.Control.Feedback type="invalid">
+              {validationErrors.email}
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="description">
             <Form.Label>Description</Form.Label>
@@ -72,7 +125,11 @@ const EditCompanyModal = React.memo(({ company, show, onHide, onSave }) => {
               name="phone_number"
               value={updatedCompany.phone_number}
               onChange={handleInputChange}
+              isInvalid={!!validationErrors.phone_number}
             />
+            <Form.Control.Feedback type="invalid">
+              {validationErrors.phone_number}
+            </Form.Control.Feedback>
           </Form.Group>
         </Form>
       </Modal.Body>
