@@ -1,0 +1,14 @@
+.icons {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.edit-icon {
+  font-size: 30px !important;
+  margin: 10px 10px 35px 10px;
+}
+
+.delete-icon {
+  font-size: 30px !important;
+  margin: 10px 10px 35px 10px;
+}
